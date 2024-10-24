@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/beige">
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:src="@drawable/mango_pattern"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="450dp"
+        android:layout_height="450dp"
+        android:src="@drawable/mango_image3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/text_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/rounded_corners"
+        android:orientation="vertical"
+        android:paddingVertical="50dp"
+        android:paddingHorizontal="30dp"
+        app:layout_constraintTop_toBottomOf="@id/background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center_horizontal"
+        android:layout_weight="1">
+
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Snap a photo or upload an image to start identifying your mango!"
+            android:textSize="35sp"
+            android:textColor="@android:color/black"/>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

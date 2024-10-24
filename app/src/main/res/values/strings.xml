@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Mangosoft</string>
+    <string name="camera_button">Camera</string>
+    <string name="upload_button">Upload</string>
+</resources>
