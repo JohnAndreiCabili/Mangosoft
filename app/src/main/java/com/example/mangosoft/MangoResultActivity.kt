@@ -61,14 +61,39 @@ class MangoResultActivity : AppCompatActivity() {
         // Retrieve the image URI passed from HomeActivity
         val currentImageUri: Uri? = intent.getParcelableExtra("imageUri")
 
+        // Retrieve the price value passed from the HomeActivity
+        val finalPriceValue: String? = intent.getStringExtra("priceValue")
+
+        // Retrieve the confidence value passed from the HomeActivity
+        val finalConfidence: Float = intent.getFloatExtra("confidence", -1f)
+
+        // Retrieve the mango_type value passed from the HomeActivity
+        val finalType: String? = intent.getStringExtra("type")
+
+        // Retrieve the mango_class value passed from the HomeActivity
+        val finalClass: String? = intent.getStringExtra("mangoClass")
+
         if (currentImageUri != null) {
             uploadedImage.setImageURI(currentImageUri) // Display the image in the ImageView
 
             // Set classification details for demonstration purposes
-            classificationText.text = "Classification: Indian"
-            accuracyText.text = "Accuracy: 95%"
-            classText.text = "Class: A"
-            priceRangeText.text = "Price Range: Php 100/kg"
+            classificationText.text = "Classification: " + finalType
+
+            if (finalConfidence != 0F) {
+                accuracyText.text = "Confidence: " + finalConfidence + "%"
+            }
+            else{
+                accuracyText.text = ""
+            }
+
+            classText.text = finalClass
+
+            if (finalPriceValue != "Unknown") {
+                priceRangeText.text = "Estimated Price: Php " + finalPriceValue + "/kg"
+            }
+            else{
+                priceRangeText.text = "Estimated Price: " + finalPriceValue
+            }
 
             // Get and display the current date and time
             val currentDateTime = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date())

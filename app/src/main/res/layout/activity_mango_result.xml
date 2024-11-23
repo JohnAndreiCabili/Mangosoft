@@ -72,7 +72,7 @@
                 android:id="@+id/accuracyText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Accuracy: 95%"
+                android:text="Accuracy: "
                 app:layout_constraintTop_toBottomOf="@+id/accuracyProgress"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:layout_marginVertical="10sp"
-                android:text="Class: A"
+                android:text="Class: "
                 app:layout_constraintTop_toBottomOf="@+id/accuracyText"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:layout_marginVertical="10sp"
-                android:text="Price Range: Php 100/kg"
+                android:text="Price Range: "
                 app:layout_constraintTop_toBottomOf="@+id/classText"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
