@@ -74,11 +74,13 @@ class MangoResultActivity : AppCompatActivity() {
         val finalClass: String? = intent.getStringExtra("mangoClass")
 
         if (currentImageUri != null) {
-            uploadedImage.setImageURI(currentImageUri) // Display the image in the ImageView
+            // Display the image in the ImageView
+            uploadedImage.setImageURI(currentImageUri)
 
-            // Set classification details for demonstration purposes
+            // Set classification
             classificationText.text = "Classification: " + finalType
 
+            // Set confidence
             if (finalConfidence != 0F) {
                 accuracyText.text = "Confidence: " + finalConfidence + "%"
             }
@@ -86,8 +88,10 @@ class MangoResultActivity : AppCompatActivity() {
                 accuracyText.text = ""
             }
 
+            //Set class
             classText.text = finalClass
 
+            //Set price
             if (finalPriceValue != "Unknown") {
                 priceRangeText.text = "Estimated Price: Php " + finalPriceValue + "/kg"
             }

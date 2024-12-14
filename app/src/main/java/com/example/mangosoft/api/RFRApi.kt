@@ -1,6 +1,7 @@
 package com.example.mangosoft.api
 
 import com.example.mangosoft.model.RFRInput
+import com.example.mangosoft.model.RFRResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -11,3 +12,4 @@ interface RFRApi {
         @Body request: RFRInput
     ): Response<Array<String>>
 }
+

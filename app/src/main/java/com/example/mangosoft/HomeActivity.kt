@@ -37,13 +37,13 @@ class HomeActivity : AppCompatActivity() {
     private val CAMERA_REQUEST_CODE = 100 // Code for handling camera permission request results
     private val GALLERY_REQUEST_CODE = 101 // Code for handling gallery permission request results
     private lateinit var currentImageUri: Uri // Stores URI of the current image
-    private lateinit var currentPriceValue: String
+    var currentPriceValue: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home) // Sets the home screen layout
 
-        currentPriceValue = "test"
+        //currentPriceValue = "test"
 
         // Finds and assigns the gallery and camera button containers
         val uploadButton: LinearLayout = findViewById(R.id.galleryButtonContainer)
@@ -91,11 +91,8 @@ class HomeActivity : AppCompatActivity() {
                 val data = result.data
                 currentImageUri = data?.data ?: return@registerForActivityResult // Gets the image URI
 
-                //Model Initialization
+                // Model Initialization
                 callCNNApi { modelInit() }
-
-                // Opens MangoResultActivity to display the selected image
-                //openMangoResultActivity()
             }
         }
 
@@ -103,12 +100,16 @@ class HomeActivity : AppCompatActivity() {
     private val cameraLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
+                val data = result.data
+                // If the image was captured using the camera, result.data will contain the image URI or file path
+                val imageUri = data?.data ?: Uri.parse(currentImageUri.toString()) // Use a fallback if URI is missing
 
-                //Model Initialization
-                modelInit()
-
-                // Opens MangoResultActivity to display the captured image
-                //openMangoResultActivity()
+                // Ensure the URI is valid
+                imageUri?.let {
+                    currentImageUri = it
+                    // Model Initialization
+                    callCNNApi { modelInit() }
+                }
             }
         }
 
@@ -190,7 +191,6 @@ class HomeActivity : AppCompatActivity() {
             resultType?.contains("CLASS-E", ignoreCase = true) == true) 1 else 0
 
 
-
         // Get current year and month
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
@@ -229,7 +229,8 @@ class HomeActivity : AppCompatActivity() {
             Month_December = monthFields[11]
         )
 
-        // Use CoroutineScope to call the suspend function
+
+        //Use CoroutineScope to call the suspend function
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val res = repo.processRFR(cnndata) // Calls the suspend function
@@ -240,6 +241,8 @@ class HomeActivity : AppCompatActivity() {
                     Log.d("RFRResponse", "Response Body: ${res.body().toString()}")
 
                     currentPriceValue = res.body()!!.joinToString (", ").trim()
+
+                    Log.d("RFRResponse", "Response Variable: $currentPriceValue")
                     //Toast.makeText(this@HomeActivity, currentPriceValue, Toast.LENGTH_SHORT).show()
 
                     openMangoResultActivity()
@@ -288,7 +291,6 @@ class HomeActivity : AppCompatActivity() {
             intent.putExtra("mangoClass", currentMangoClass) // Passes mango_type value to the next activity
             startActivity(intent)
         } else {
-//            Toast.makeText(this, "Data not ready yet. Please try again.", Toast.LENGTH_SHORT).show()
 
             val intent = Intent(this, MangoResultActivity::class.java)
             intent.putExtra("imageUri", currentImageUri) // Passes image URI to the next activity
@@ -299,7 +301,6 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
 
 
     // Creates a temporary image file to store the captured image
