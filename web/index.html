@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mangosoft Web</title>
+    <link rel="icon" type="image/svg+xml" href="assets/mangosoft-icon.svg" />
+    <meta name="theme-color" content="#fbc02d" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script defer src="main.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  </head>
+  <body>
+    <div id="app" class="app">
+      <section id="splash" class="screen splash-screen" aria-hidden="false">
+        <div class="logo-badge" aria-hidden="true">
+          <span>MS</span>
+        </div>
+        <p class="splash-text">Classify. Assess. Price.</p>
+      </section>
+
+      <section id="onboarding" class="screen onboarding" aria-hidden="true">
+        <div class="onboarding-visual" aria-hidden="true">
+          <div class="visual-blob blob-one"></div>
+          <div class="visual-blob blob-two"></div>
+          <span class="visual-glyph">🥭</span>
+        </div>
+        <div class="onboarding-card">
+          <div id="onboarding-slide" class="onboarding-slide" aria-live="polite"></div>
+          <div class="progress-wrapper" aria-hidden="true">
+            <div class="progress-bar">
+              <div id="progress-indicator" class="progress-indicator"></div>
+            </div>
+          </div>
+          <div class="onboarding-actions">
+            <button id="skip-btn" class="btn ghost">Skip</button>
+            <button id="back-btn" class="btn ghost">Back</button>
+            <button id="next-btn" class="btn primary">Next</button>
+            <button id="start-btn" class="btn primary">Get Started</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="home" class="screen home" aria-hidden="true">
+        <header class="home-header">
+          <div class="brand-title" aria-label="Mangosoft">Mangosoft</div>
+          <h1>How would you like to scan your mangoes?</h1>
+        </header>
+        <div class="scan-options">
+          <button id="upload-btn" class="scan-option" type="button">
+            <span class="scan-icon upload" aria-hidden="true"></span>
+            <div>
+              <h2>Upload an Image</h2>
+              <p>Upload a mango photo from your gallery to start scanning.</p>
+            </div>
+          </button>
+          <button id="camera-btn" class="scan-option" type="button">
+            <span class="scan-icon camera" aria-hidden="true"></span>
+            <div>
+              <h2>Capture an Image</h2>
+              <p>Use your device camera to capture a mango photo instantly.</p>
+            </div>
+          </button>
+        </div>
+        <input id="gallery-input" class="sr-only" type="file" accept="image/*" />
+        <input
+          id="camera-input"
+          class="sr-only"
+          type="file"
+          accept="image/*"
+          capture="environment"
+        />
+      </section>
+
+      <section id="result" class="screen result" aria-hidden="true">
+        <header class="result-header">
+          <div class="brand-title" aria-label="Mangosoft">Mangosoft</div>
+        </header>
+        <article class="result-card" id="result-card">
+          <figure class="result-image">
+            <img id="preview-image" alt="Scanned mango preview" />
+          </figure>
+          <dl class="result-details">
+            <div>
+              <dt>Classification</dt>
+              <dd id="classification-value">—</dd>
+            </div>
+            <div>
+              <dt>Confidence</dt>
+              <dd>
+                <div class="confidence">
+                  <div class="progress-bar" aria-hidden="true">
+                    <div id="confidence-indicator" class="progress-indicator"></div>
+                  </div>
+                  <span id="confidence-value">—</span>
+                </div>
+              </dd>
+            </div>
+            <div>
+              <dt>Quality Class</dt>
+              <dd id="class-value">—</dd>
+            </div>
+            <div>
+              <dt>Estimated Price</dt>
+              <dd id="price-value">—</dd>
+            </div>
+            <div>
+              <dt>Generated</dt>
+              <dd id="timestamp-value">—</dd>
+            </div>
+          </dl>
+          <p id="result-error" class="result-error" role="alert" hidden>
+            Mango not detected. Please try again with a clearer photo.
+          </p>
+        </article>
+        <div class="result-actions">
+          <button id="save-btn" class="btn outlined" type="button">Save a Copy</button>
+          <button id="rescan-btn" class="btn primary" type="button">Scan Again</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+    <div id="loading" class="loading" hidden>
+      <div class="spinner" role="status" aria-live="assertive" aria-busy="true"></div>
+      <p>Analyzing your mango…</p>
+    </div>
+  </body>
+</html>
