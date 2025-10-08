@@ -8,9 +8,10 @@ Mangosoft is an Android application that classifies Philippine mango varieties, 
 
 - Upload or capture mango images for classification  
 - Identifies mango variety and quality class  
-- Displays classification accuracy with percentage bar  
-- Provides price estimation based on quality  
-- Intuitive onboarding and guided scanning process  
+- Displays classification accuracy with percentage bar
+- Provides price estimation based on quality
+- Live status banner surfaces upload, detection, and pricing progress so you always know what the analyzer is doing
+- Intuitive onboarding and guided scanning process
 
 ---
 
@@ -93,6 +94,7 @@ Return to the Terminal/PowerShell window and press `Ctrl + C` to shut down the l
 ### Troubleshooting
 
 - **Blank page after updating files:** Refresh twice to bust the service worker cache, or run `navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()))` from DevTools and reload.
+- **Still seeing an analysis status?** The banner steps through **Uploading → Detecting → Estimating**. If the APIs take longer than nine seconds you'll see a sample mango result with a reconnect notice—start a new scan once you're back online for live predictions.
 - **Camera button disabled:** Make sure your browser has camera permissions and that you're running over `http://localhost` or `https://` (required for getUserMedia).
 - **Port already in use:** Pass a different port to the `http.server` command and update the browser URL accordingly.
 - **Windows firewall prompt:** Allow Python to communicate on private networks so the local browser can connect.

@@ -2,6 +2,8 @@
 
 A browser-based port of the Mangosoft Android application. The web experience mirrors the native flow: splash and onboarding screens lead to scanning options where users can upload or capture mango photos, receive AI-powered classification, view confidence and quality class, and get a price estimate.
 
+While a scan is running the app now displays a live banner that walks through each stage—uploading your mango photo, detecting the variety, and estimating the quality and price—so you always know what is happening behind the scenes.
+
 ## Getting Started
 
 **Need the 10-second version?** Run `cd web && python3 -m http.server 4173` from the repo root, then browse to <http://localhost:4173>. Keep reading if you want platform-specific tips, install prompts, and troubleshooting help.
@@ -69,10 +71,20 @@ The application targets the same hosted APIs as the Android app:
 
 If you need to point to alternative deployments, update the `BASE_URL_YOLO` and `BASE_URL_RFR` constants inside `web/main.js`.
 
+## Live analysis banner
+
+The status banner at the top of the interface steps through three stages for every scan:
+
+1. **Uploading your mango photo…**
+2. **Detecting mango variety…**
+3. **Estimating quality and price…**
+
+If the APIs pause for more than nine seconds, the banner switches to a reconnect notice while the UI surfaces a sample mango profile. Start another scan once you're back online and the banner will move through the live stages again.
+
 ## Saving Results
 
 The **Save a Copy** button uses [`html2canvas`](https://html2canvas.hertzen.com/) from a CDN to export the result card. The feature requires network access the first time it runs so the script can be downloaded. Once cached by the browser, it continues to work offline.
 
 ### When the analyzer is offline
 
-If the hosted APIs time out or you are disconnected from the internet, Mangosoft Web now surfaces a branded sample result after a few seconds so you can keep exploring the interface. A blue notice appears on the result card explaining that the live analyzer is reconnecting, and you can retry the scan at any time from the **Scan Again** button. Once the services respond again, real predictions automatically replace the sample output.
+If the hosted APIs time out or you are disconnected from the internet, Mangosoft Web now surfaces a branded sample result after a few seconds so you can keep exploring the interface. A blue notice appears on the result card explaining that the live analyzer is reconnecting, and the status banner shows the reconnect message for a short time. You can retry the scan at any time from the **Scan Again** button. Once the services respond again, real predictions automatically replace the sample output and the banner returns to its normal stage progression.

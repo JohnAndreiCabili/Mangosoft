@@ -50,7 +50,7 @@ body {
 }
 
 .analysis-banner::before {
-  content: "⏳";
+  content: attr(data-icon);
   font-size: 1.25rem;
 }
 

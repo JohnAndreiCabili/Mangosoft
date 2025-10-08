@@ -17,6 +17,13 @@ const galleryInput = document.getElementById("gallery-input");
 const cameraInput = document.getElementById("camera-input");
 const toast = document.getElementById("toast");
 const analysisBanner = document.getElementById("analysis-banner");
+const defaultAnalysisMessage =
+  analysisBanner?.textContent.trim() || "Analyzing your mango…";
+const defaultAnalysisIcon = analysisBanner?.dataset.icon || "⏳";
+
+if (analysisBanner) {
+  analysisBanner.dataset.icon = defaultAnalysisIcon;
+}
 
 const previewImage = document.getElementById("preview-image");
 const classificationValue = document.getElementById("classification-value");
@@ -47,6 +54,7 @@ let onboardingIndex = 0;
 let selectedFile = null;
 let previewUrl = null;
 let activeAnalysisId = 0;
+let fallbackNoticeTimer = null;
 
 const slides = [
   {
@@ -112,13 +120,38 @@ const showToast = (message, duration = 3000) => {
   }, duration);
 };
 
-const toggleLoading = (show) => {
+const clearFallbackNotice = () => {
+  if (fallbackNoticeTimer) {
+    clearTimeout(fallbackNoticeTimer);
+    fallbackNoticeTimer = null;
+  }
+};
+
+const setAnalysisState = ({ show, message, icon } = {}) => {
   if (!analysisBanner) {
     return;
   }
 
-  analysisBanner.hidden = !show;
-  analysisBanner.setAttribute("aria-hidden", show ? "false" : "true");
+  const shouldShow = Boolean(show);
+
+  if (typeof message === "string") {
+    analysisBanner.textContent = message;
+  } else if (!shouldShow) {
+    analysisBanner.textContent = defaultAnalysisMessage;
+  }
+
+  if (typeof icon === "string") {
+    analysisBanner.dataset.icon = icon;
+  } else if (!shouldShow) {
+    analysisBanner.dataset.icon = defaultAnalysisIcon;
+  }
+
+  analysisBanner.hidden = !shouldShow;
+  analysisBanner.setAttribute("aria-hidden", shouldShow ? "false" : "true");
+
+  if (!shouldShow) {
+    clearFallbackNotice();
+  }
 };
 
 const resetResult = () => {
@@ -323,6 +356,7 @@ const handleFileSelection = async (file) => {
 
   const currentAnalysisId = ++activeAnalysisId;
   resetResult();
+  clearFallbackNotice();
 
   if (previewUrl) {
     URL.revokeObjectURL(previewUrl);
@@ -331,7 +365,11 @@ const handleFileSelection = async (file) => {
   previewUrl = URL.createObjectURL(file);
   previewImage.src = previewUrl;
 
-  toggleLoading(true);
+  setAnalysisState({
+    show: true,
+    message: "Uploading your mango photo…",
+    icon: "📤",
+  });
   let fallbackTriggered = false;
   const fallbackTimer = setTimeout(() => {
     if (currentAnalysisId !== activeAnalysisId || fallbackTriggered) {
@@ -339,7 +377,17 @@ const handleFileSelection = async (file) => {
     }
 
     fallbackTriggered = true;
-    toggleLoading(false);
+    clearFallbackNotice();
+    setAnalysisState({
+      show: true,
+      message: "Analyzer temporarily offline — showing a sample result while we reconnect.",
+      icon: "📡",
+    });
+    fallbackNoticeTimer = setTimeout(() => {
+      if (currentAnalysisId === activeAnalysisId) {
+        setAnalysisState({ show: false });
+      }
+    }, 6000);
     updateResultView({
       mangoType: FALLBACK_SAMPLE.mangoType,
       confidence: FALLBACK_SAMPLE.confidence,
@@ -354,6 +402,11 @@ const handleFileSelection = async (file) => {
     showToast("Using a sample mango profile while the analyzer reconnects.");
   }, FALLBACK_ANALYSIS_DELAY_MS);
   try {
+    setAnalysisState({
+      show: true,
+      message: "Detecting mango variety…",
+      icon: "🧠",
+    });
     const cnnResponse = await callCnnApi(file);
     if (currentAnalysisId !== activeAnalysisId || fallbackTriggered) {
       return;
@@ -363,6 +416,11 @@ const handleFileSelection = async (file) => {
 
     let priceResponse = null;
     try {
+      setAnalysisState({
+        show: true,
+        message: "Estimating quality and price…",
+        icon: "💰",
+      });
       const rfrPayload = buildRfrPayload(flags);
       priceResponse = await callRfrApi(rfrPayload);
     } catch (error) {
@@ -383,6 +441,7 @@ const handleFileSelection = async (file) => {
     resultInfo.hidden = true;
     resultInfo.textContent = "";
     errorMessage.hidden = true;
+    setAnalysisState({ show: false });
     showScreen("result");
   } catch (error) {
     console.error(error);
@@ -408,11 +467,12 @@ const handleFileSelection = async (file) => {
         ? "The analysis took too long. Please try again."
         : "We couldn't analyze the image. Please try again."
     );
+    setAnalysisState({ show: false });
     showScreen("result");
   } finally {
     clearTimeout(fallbackTimer);
     if (!fallbackTriggered && currentAnalysisId === activeAnalysisId) {
-      toggleLoading(false);
+      setAnalysisState({ show: false });
     }
   }
 };
@@ -485,6 +545,7 @@ cameraInput.addEventListener("change", (event) => {
 rescanBtn.addEventListener("click", () => {
   activeAnalysisId += 1;
   resetResult();
+  setAnalysisState({ show: false });
   showScreen("home");
 });
 
