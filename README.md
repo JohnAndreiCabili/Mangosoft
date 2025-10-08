@@ -118,3 +118,23 @@ git push -u origin main
 ```
 
 Once pushed, cloning that new repository on macOS (or any platform) only requires running `python3 -m http.server 4173` inside the cloned folder to launch the web app locally.
+
+---
+
+## Cloning the entire project into a fresh GitHub repository
+
+If you want a clean Git history containing **every** Mangosoft asset (Android app, web port, scripts, and documentation), use the companion helper script. It mirrors the whole repository—minus the existing `.git` folder and build artifacts—into `build/mangosoft-full/`, initialises a new Git repository, and makes the first commit for you.
+
+```bash
+./scripts/prepare-full-repo.sh
+```
+
+After the script finishes:
+
+```bash
+cd build/mangosoft-full
+git remote add origin <your_github_repo_url>
+git push -u origin main
+```
+
+At that point the new GitHub repository is ready for collaborators to clone and run either the Android project (via Android Studio) or the installable web build (with `cd web && python3 -m http.server 4173`).

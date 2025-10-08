@@ -20,6 +20,8 @@ From the repository root run:
 
 The script copies the contents of this folder into `build/mangosoft-web/`, initialises a fresh Git history, and commits everything so you can immediately add a GitHub remote and push. It uses tools that ship with macOS (`git`, `python3`, and `rsync`). Once the new repository is created, cloning it on macOS and running `python3 -m http.server 4173` is all that is required to launch the app locally.
 
+> **Need every Mangosoft asset (Android + web) in a brand-new repo instead?** Run `./scripts/prepare-full-repo.sh` from the root to clone the complete project into `build/mangosoft-full/` with a clean Git history.
+
 ### Quick start on macOS
 
 1. Open the **Terminal** application (`⌘ + Space`, type "Terminal").
