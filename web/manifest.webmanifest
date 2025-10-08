@@ -1,0 +1,16 @@
+{
+  "name": "Mangosoft",
+  "short_name": "Mangosoft",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#fbc02d",
+  "description": "Classify mangoes, assess quality, and estimate prices with Mangosoft's AI.",
+  "icons": [
+    {
+      "src": "assets/mangosoft-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
