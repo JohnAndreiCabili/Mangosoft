@@ -38,6 +38,8 @@ git clone https://github.com/JohnAndreiCabili/Mangosoft.git
 
 **In a hurry?** From the repository root run `cd web && python3 -m http.server 4173`, then open <http://localhost:4173> in your browser. That’s all you need to see the web app. The expanded instructions below cover prerequisites, installation prompts, and troubleshooting in more detail if you run into issues.
 
+Prefer a script? Run `./scripts/run-web.sh [port]` from the repo root and it will verify `python3` is available, start the server from `web/`, and default to port 4173 (pass a different port if needed).
+
 The `web/` directory contains a Progressive Web App (PWA) port of Mangosoft that you can run and install on macOS, Windows, or Linux. You only need a static file server (Python's built-in server works great) and a modern Chromium, Edge, or Safari (macOS 17+) browser.
 
 ### 1. Install prerequisites (if needed)

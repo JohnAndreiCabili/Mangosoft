@@ -8,6 +8,8 @@ While a scan is running the app now displays a live banner that walks through ea
 
 **Need the 10-second version?** Run `cd web && python3 -m http.server 4173` from the repo root, then browse to <http://localhost:4173>. Keep reading if you want platform-specific tips, install prompts, and troubleshooting help.
 
+Alternatively, run `../scripts/run-web.sh [port]` from inside this folder or `./scripts/run-web.sh [port]` from the project root—the helper checks for `python3`, launches the static server from `web/`, and defaults to port 4173 unless you pass a different value.
+
 You only need a static file server to run the web build.
 
 ### One-command export to a standalone GitHub repo
