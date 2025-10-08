@@ -18,6 +18,12 @@
     <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   </head>
   <body>
+    <div class="background-canvas" aria-hidden="true">
+      <div class="canvas-gradient"></div>
+      <div class="canvas-orb orb-one"></div>
+      <div class="canvas-orb orb-two"></div>
+      <img src="assets/mango-hero.svg" alt="" class="canvas-illustration" />
+    </div>
     <div id="app" class="app">
       <section id="splash" class="screen splash-screen" aria-hidden="false">
         <div class="logo-badge" aria-hidden="true">
@@ -116,6 +122,7 @@
               <dd id="timestamp-value">—</dd>
             </div>
           </dl>
+          <p id="result-info" class="result-info" role="status" hidden></p>
           <p id="result-error" class="result-error" role="alert" hidden>
             Mango not detected. Please try again with a clearer photo.
           </p>

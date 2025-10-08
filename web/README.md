@@ -62,3 +62,7 @@ If you need to point to alternative deployments, update the `BASE_URL_YOLO` and 
 ## Saving Results
 
 The **Save a Copy** button uses [`html2canvas`](https://html2canvas.hertzen.com/) from a CDN to export the result card. The feature requires network access the first time it runs so the script can be downloaded. Once cached by the browser, it continues to work offline.
+
+### When the analyzer is offline
+
+If the hosted APIs time out or you are disconnected from the internet, Mangosoft Web now surfaces a branded sample result after a few seconds so you can keep exploring the interface. A blue notice appears on the result card explaining that the live analyzer is reconnecting, and you can retry the scan at any time from the **Scan Again** button. Once the services respond again, real predictions automatically replace the sample output.

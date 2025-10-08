@@ -25,18 +25,28 @@ const confidenceIndicator = document.getElementById("confidence-indicator");
 const classValue = document.getElementById("class-value");
 const priceValue = document.getElementById("price-value");
 const timestampValue = document.getElementById("timestamp-value");
+const resultInfo = document.getElementById("result-info");
 const errorMessage = document.getElementById("result-error");
 const saveBtn = document.getElementById("save-btn");
 const rescanBtn = document.getElementById("rescan-btn");
 const resultCard = document.getElementById("result-card");
+const defaultErrorMessage = errorMessage.textContent.trim();
 
 const BASE_URL_YOLO = "https://mangosoft-722758638200.asia-southeast1.run.app/";
 const BASE_URL_RFR = "https://mangosoft-e87cfb72dc61.herokuapp.com/";
 const API_TIMEOUT_MS = 20000;
+const FALLBACK_ANALYSIS_DELAY_MS = 9000;
+const FALLBACK_SAMPLE = {
+  mangoType: "Carabao",
+  mangoClass: "CLASS A",
+  confidence: 0.92,
+  price: 120,
+};
 
 let onboardingIndex = 0;
 let selectedFile = null;
 let previewUrl = null;
+let activeAnalysisId = 0;
 
 const slides = [
   {
@@ -114,7 +124,10 @@ const resetResult = () => {
   classValue.textContent = "—";
   priceValue.textContent = "—";
   timestampValue.textContent = "—";
+  resultInfo.hidden = true;
+  resultInfo.textContent = "";
   errorMessage.hidden = true;
+  errorMessage.textContent = defaultErrorMessage;
 };
 
 const determineTypeAndClass = (mangoType) => {
@@ -303,6 +316,7 @@ const handleFileSelection = async (file) => {
     return;
   }
 
+  const currentAnalysisId = ++activeAnalysisId;
   resetResult();
 
   if (previewUrl) {
@@ -313,8 +327,33 @@ const handleFileSelection = async (file) => {
   previewImage.src = previewUrl;
 
   toggleLoading(true);
+  let fallbackTriggered = false;
+  const fallbackTimer = setTimeout(() => {
+    if (currentAnalysisId !== activeAnalysisId || fallbackTriggered) {
+      return;
+    }
+
+    fallbackTriggered = true;
+    toggleLoading(false);
+    updateResultView({
+      mangoType: FALLBACK_SAMPLE.mangoType,
+      confidence: FALLBACK_SAMPLE.confidence,
+      mangoClass: FALLBACK_SAMPLE.mangoClass,
+      price: FALLBACK_SAMPLE.price,
+    });
+    resultInfo.hidden = false;
+    resultInfo.textContent =
+      "Live analysis is taking longer than expected. Here's a sample result while we reconnect.";
+    errorMessage.hidden = true;
+    showScreen("result");
+    showToast("Using a sample mango profile while the analyzer reconnects.");
+  }, FALLBACK_ANALYSIS_DELAY_MS);
   try {
     const cnnResponse = await callCnnApi(file);
+    if (currentAnalysisId !== activeAnalysisId || fallbackTriggered) {
+      return;
+    }
+
     const { type, mangoClass, flags } = determineTypeAndClass(cnnResponse?.mango_type);
 
     let priceResponse = null;
@@ -325,6 +364,10 @@ const handleFileSelection = async (file) => {
       console.error(error);
     }
 
+    if (currentAnalysisId !== activeAnalysisId || fallbackTriggered) {
+      return;
+    }
+
     updateResultView({
       mangoType: type,
       confidence: cnnResponse?.confidence,
@@ -332,17 +375,40 @@ const handleFileSelection = async (file) => {
       price: priceResponse,
     });
 
+    resultInfo.hidden = true;
+    resultInfo.textContent = "";
     errorMessage.hidden = true;
     showScreen("result");
   } catch (error) {
     console.error(error);
-    errorMessage.hidden = false;
-    updateResultView({ mangoType: "Unknown", confidence: null, mangoClass: "Unknown", price: "Unknown" });
+    if (currentAnalysisId !== activeAnalysisId || fallbackTriggered) {
+      return;
+    }
+
+    resultInfo.hidden = true;
+    resultInfo.textContent = "";
     const timedOut = error?.name === "AbortError";
-    showToast(timedOut ? "The analysis took too long. Please try again." : "We couldn't analyze the image. Please try again.");
+    errorMessage.hidden = false;
+    errorMessage.textContent = timedOut
+      ? "The analyzer took too long to respond. Please try again shortly."
+      : "We couldn't analyze the image. Please try again.";
+    updateResultView({
+      mangoType: "Unknown",
+      confidence: null,
+      mangoClass: "Unknown",
+      price: "Unknown",
+    });
+    showToast(
+      timedOut
+        ? "The analysis took too long. Please try again."
+        : "We couldn't analyze the image. Please try again."
+    );
     showScreen("result");
   } finally {
-    toggleLoading(false);
+    clearTimeout(fallbackTimer);
+    if (!fallbackTriggered && currentAnalysisId === activeAnalysisId) {
+      toggleLoading(false);
+    }
   }
 };
 
@@ -412,6 +478,7 @@ cameraInput.addEventListener("change", (event) => {
 });
 
 rescanBtn.addEventListener("click", () => {
+  activeAnalysisId += 1;
   resetResult();
   showScreen("home");
 });

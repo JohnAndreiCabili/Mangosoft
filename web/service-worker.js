@@ -1,4 +1,4 @@
-const CACHE_NAME = "mangosoft-web-v2";
+const CACHE_NAME = "mangosoft-web-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -6,6 +6,7 @@ const APP_SHELL = [
   "./main.js",
   "./manifest.webmanifest",
   "./assets/mangosoft-icon.svg",
+  "./assets/mango-hero.svg",
   "https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"
 ];
 

@@ -1,10 +1,14 @@
 :root {
-  --beige: #fff1d0;
-  --muted-yellow: #f8d278;
+  --sunrise-start: #fff7df;
+  --sunrise-mid: #ffe0b2;
+  --sunrise-end: #ffb347;
+  --muted-yellow: #fbd999;
   --orange: #f79f1f;
   --dark: #1f1f1f;
   --light: #ffffff;
-  --shadow: rgba(0, 0, 0, 0.15);
+  --card-surface: rgba(255, 255, 255, 0.82);
+  --card-border: rgba(255, 255, 255, 0.42);
+  --shadow: rgba(0, 0, 0, 0.12);
   --radius-lg: 32px;
   --radius-md: 20px;
   --radius-sm: 12px;
@@ -19,9 +23,56 @@
 }
 
 body {
-  background: var(--muted-yellow);
+  background: linear-gradient(120deg, var(--sunrise-start) 0%, var(--sunrise-mid) 45%, var(--sunrise-end) 100%);
   color: var(--dark);
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.background-canvas {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.canvas-gradient {
+  background: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.65), transparent 55%),
+    radial-gradient(circle at 80% 70%, rgba(255, 183, 77, 0.45), transparent 65%);
+  inset: 0;
+  position: absolute;
+}
+
+.canvas-orb {
+  border-radius: 50%;
+  filter: blur(0px);
+  opacity: 0.55;
+  position: absolute;
+}
+
+.orb-one {
+  background: rgba(255, 213, 128, 0.65);
+  height: clamp(220px, 32vw, 340px);
+  left: clamp(-60px, -5vw, 40px);
+  top: clamp(-40px, 4vw, 120px);
+  width: clamp(220px, 32vw, 340px);
+}
+
+.orb-two {
+  background: rgba(255, 171, 64, 0.35);
+  bottom: clamp(-120px, -6vw, 40px);
+  height: clamp(320px, 42vw, 480px);
+  right: clamp(-120px, -10vw, 30px);
+  width: clamp(320px, 42vw, 480px);
+}
+
+.canvas-illustration {
+  filter: drop-shadow(0 26px 60px rgba(245, 124, 0, 0.45));
+  height: clamp(180px, 36vw, 320px);
+  left: 50%;
+  position: absolute;
+  top: clamp(120px, 22vh, 220px);
+  transform: translateX(-50%) rotate(-6deg);
 }
 
 img {
@@ -32,11 +83,14 @@ img {
 .app {
   min-height: 100vh;
   position: relative;
+  z-index: 1;
 }
+
 
 .screen {
   display: none;
   min-height: 100vh;
+  padding: clamp(1.5rem, 4vw, 3rem) 1.5rem;
 }
 
 .screen.active {
@@ -45,8 +99,6 @@ img {
 
 .splash-screen {
   align-items: center;
-  background: radial-gradient(circle at 20% 20%, rgba(247, 159, 31, 0.4), transparent 60%),
-    radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.4), transparent 60%), var(--muted-yellow);
   flex-direction: column;
   justify-content: center;
   text-align: center;
@@ -55,10 +107,11 @@ img {
 
 .logo-badge {
   align-items: center;
-  background: linear-gradient(135deg, #f57c00, #fbc02d);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.2));
+  border: 1px solid var(--card-border);
   border-radius: 28px;
-  box-shadow: 0 18px 40px rgba(245, 124, 0, 0.35);
-  color: #fff;
+  box-shadow: 0 28px 60px rgba(245, 124, 0, 0.25);
+  color: var(--orange);
   display: inline-flex;
   font-size: clamp(2rem, 6vw, 3.5rem);
   font-weight: 700;
@@ -67,6 +120,7 @@ img {
   letter-spacing: 0.1em;
   padding: 0 1.5rem;
   text-transform: uppercase;
+  text-shadow: 0 12px 24px rgba(245, 124, 0, 0.28);
 }
 
 .splash-text {
@@ -75,7 +129,7 @@ img {
 }
 
 .onboarding {
-  background: var(--beige);
+  background: transparent;
   flex-direction: column;
 }
 
@@ -120,9 +174,11 @@ img {
 }
 
 .onboarding-card {
-  background: var(--light);
+  background: var(--card-surface);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  box-shadow: 0 -20px 45px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
   padding: clamp(1.5rem, 5vw, 3rem);
   display: flex;
   flex-direction: column;
@@ -238,7 +294,7 @@ img {
 
 .home {
   align-items: center;
-  background: var(--muted-yellow);
+  background: transparent;
   flex-direction: column;
   gap: 2rem;
   padding: clamp(2rem, 4vw, 4rem) 1.5rem;
@@ -271,9 +327,11 @@ img {
 }
 
 .scan-options {
-  background: rgba(255, 255, 255, 0.55);
+  background: var(--card-surface);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-lg);
-  box-shadow: 0 30px 45px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 30px 45px rgba(0, 0, 0, 0.18);
   display: grid;
   gap: 1rem;
   padding: clamp(1.5rem, 4vw, 3rem);
@@ -332,16 +390,18 @@ img {
 
 .result {
   align-items: center;
-  background: var(--muted-yellow);
+  background: transparent;
   flex-direction: column;
   gap: 2rem;
   padding: clamp(2rem, 5vw, 4rem) 1.5rem clamp(3rem, 5vw, 5rem);
 }
 
 .result-card {
-  background: var(--light);
+  background: var(--card-surface);
+  backdrop-filter: blur(18px);
+  border: 1px solid var(--card-border);
   border-radius: var(--radius-lg);
-  box-shadow: 0 40px 60px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 40px 60px rgba(0, 0, 0, 0.2);
   display: grid;
   gap: 1.5rem;
   max-width: 720px;
@@ -385,12 +445,20 @@ img {
   gap: 1rem;
 }
 
+.result-info,
 .result-error {
   background: rgba(220, 53, 69, 0.1);
   border-left: 4px solid #dc3545;
   border-radius: 0 12px 12px 0;
   color: #8a1c26;
+  margin-top: 0.5rem;
   padding: 0.75rem 1rem;
+}
+
+.result-info {
+  background: rgba(33, 150, 243, 0.14);
+  border-left-color: rgba(33, 150, 243, 0.75);
+  color: #0d47a1;
 }
 
 .result-actions {
@@ -460,6 +528,8 @@ img {
 @media (min-width: 960px) {
   .onboarding {
     flex-direction: row;
+    gap: 4rem;
+    padding: clamp(3rem, 6vw, 5rem) clamp(3rem, 8vw, 6rem);
   }
 
   .onboarding-visual {
@@ -467,9 +537,10 @@ img {
   }
 
   .onboarding-card {
-    border-radius: 0;
-    flex: 1 1 50%;
+    border-radius: var(--radius-lg);
+    flex: 0 1 460px;
     justify-content: center;
+    margin-left: -2rem;
   }
 
   .onboarding-actions {
