@@ -16,6 +16,7 @@ const cameraBtn = document.getElementById("camera-btn");
 const galleryInput = document.getElementById("gallery-input");
 const cameraInput = document.getElementById("camera-input");
 const toast = document.getElementById("toast");
+const analysisBanner = document.getElementById("analysis-banner");
 
 const previewImage = document.getElementById("preview-image");
 const classificationValue = document.getElementById("classification-value");
@@ -112,7 +113,12 @@ const showToast = (message, duration = 3000) => {
 };
 
 const toggleLoading = (show) => {
-  document.body.classList.toggle("is-analyzing", show);
+  if (!analysisBanner) {
+    return;
+  }
+
+  analysisBanner.hidden = !show;
+  analysisBanner.setAttribute("aria-hidden", show ? "false" : "true");
 };
 
 const resetResult = () => {
